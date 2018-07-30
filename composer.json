@@ -3,5 +3,9 @@
         "psr-4": {
             "blog\\application\\": "./application/"
         }
+    },
+    "require": {
+        "mongodb/mongodb": "^1.4",
+        "ext-mongodb": "^1.5"
     }
 }

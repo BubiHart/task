@@ -1,4 +1,82 @@
 body
 {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
 }
+
+header
+{
+  height: 60px;
+  display: flex;
+}
+
+main
+{
+  display: flex;
+  min-height: calc(100vh - 137px);
+}
+
+main span
+{
+    font-size: 30px;
+    margin: auto;
+}
+
+footer
+{
+  height: 60px;
+  text-align: center;
+  font-size: 30px;
+}
+
+header ul
+{
+    height: auto;
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    margin-left: auto;
+    margin-right: 50px;
+}
+
+/*
+.main_navigation_li
+{
+    display: inline-block;
+}
+*/
+
+.main_navigation_li a
+{
+    display: block;
+    padding: 8px;
+    /*background-color: #dddddd;*/
+    color: #000;
+    text-decoration: none;
+}
+
+.main_navigation_li a:hover
+{
+    color: brown;
+}
+
+#registration_form
+{
+    display: flex;
+    flex-direction: column;
+}
+
+#registration_form input
+{
+    width: 150px;
+}
+
+#registration_form a
+{
+    margin-top: 10px;
+    color: #000;
+    text-decoration: none;
+}
+
+
