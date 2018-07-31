@@ -84,5 +84,27 @@ $(document).ready(function() {
         });
     });
 
+    $("#change_submit").on("click", function(event) {
+        event.preventDefault();
+
+        var link = $(this).attr("href");
+
+        $.ajax({
+            url: link,
+            method: 'post',
+            cache: false,
+            data: {
+                new_login: $("#change_new_login").val(),
+                old_password: $("#change_old_password").val(),
+                new_password: $("#change_new_password").val()
+            }
+        }).done(function(response)
+        {
+            alert(response);
+
+        });
+    });
+
+
 
 });

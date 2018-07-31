@@ -1,6 +1,7 @@
 <?php
   namespace blog\application\controllers;
   use blog\application\core\controller_core;
+  session_start();
 
   class process_controller extends controller_core
   {
@@ -17,6 +18,10 @@
            $this->model->login();
        }
 
+       if(isset($_POST['new_login']) && isset($_POST['old_password']) && isset($_POST['new_password']))
+       {
+           $this->model->change_user_data();
+       }
     }
 
   }

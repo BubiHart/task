@@ -93,10 +93,65 @@
       $collection = $client->selectCollection('task', 'users');
 
         $cursor = $collection->find();
-        foreach ($cursor as $doc)
+        foreach ($cursor as $entry)
         {
-            var_dump($doc);
+            echo $entry['_id'], ': ', $entry['login'], ',   ', $entry['password'], "<br>";
         }
+    }
+
+    function get_user_data()
+    {
+        $client = $this->database_connect();
+        $collection = $client->selectCollection('task', 'users');
+        $user_data = $collection->findOne(array('login' => $_SESSION['login']));
+
+        echo "<span>Your login: ".$user_data['login']."</span>";
+        echo "<span>Change login</span>";
+        echo "<input id='change_new_login' type='text'>";
+
+        echo "<span>Change password</span>";
+        echo "<span>Old password</span>";
+        echo "<input id='change_old_password' type='text'>";
+        echo "<span>New password</span>";
+        echo "<input id='change_new_password' type='text'>";
+
+        echo "<a id='change_submit' href='process'>Confirm changes</a>";
+
+    }
+
+    function change_user_data()
+    {
+        $client = $this->database_connect();
+        $collection = $client->selectCollection('task', 'users');
+        $user_data = $collection->findOne(array('login' => $_SESSION['login']));
+
+        $new_login = (string) $_POST['new_login'];
+        $new_login = trim($new_login);
+
+        $old_password = (string) $_POST['old_password'];
+        $old_password = trim($old_password);
+
+        $new_password = (string) $_POST['new_password'];
+        $new_password = trim($new_password);
+
+        if(!empty($new_login))
+        {
+            $data = array('login' => $new_login);
+            $collection->findOneAndReplace(array('login' => $_SESSION['login']), array('login' => $new_login));
+            $collection->insertOne($data);
+        }
+
+        if(!empty($old_password) && !empty($new_password))
+        {
+          $user_password_hash = $user_data['password'];
+
+          if(password_verify($old_password, $user_password_hash))
+          {
+              $collection->findOneAndReplace(array('login' => $_SESSION['login']), array('password' => $new_password));
+          }
+        }
+
+
     }
 
 
