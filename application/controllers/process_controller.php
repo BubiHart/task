@@ -22,6 +22,16 @@
        {
            $this->model->change_user_data();
        }
+
+       if(isset($_POST['log_out']))
+       {
+           //unset($_SESSION['login']);
+           session_destroy();
+           /*
+           $index_view = new index_controller();
+           $index_view->action_index();
+           */
+       }
     }
 
   }

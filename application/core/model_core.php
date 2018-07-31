@@ -48,8 +48,16 @@
         /*HASHING PASSWORD*/
         $user_password_hash = (string) $this->hash_password($password);
 
-        $data = array('login' => $login, 'password' => $user_password_hash);
-        $collection->insertOne($data);
+        $user_existence = $this->check_uniqueness($login);
+
+        if($user_existence === false)
+        {
+            $data = array('login' => $login, 'password' => $user_password_hash);
+            $collection->insertOne($data);
+
+            session_start();
+            $_SESSION['login'] = $login;
+        }
 
     }
 
@@ -69,7 +77,9 @@
 
         $user = $collection->findOne(array('login' => $login));
 
-        if(password_verify($password, $user['password']))
+        $user_existence = $this->check_uniqueness($login);
+
+        if(password_verify($password, $user['password']) && $user_existence === true)
         {
             session_start();
             $_SESSION['login'] = $login;
@@ -116,7 +126,6 @@
         echo "<input id='change_new_password' type='text'>";
 
         echo "<a id='change_submit' href='process'>Confirm changes</a>";
-
     }
 
     function change_user_data()
@@ -124,6 +133,9 @@
         $client = $this->database_connect();
         $collection = $client->selectCollection('task', 'users');
         $user_data = $collection->findOne(array('login' => $_SESSION['login']));
+        $user_password_hash = $user_data['password'];
+        $user_login = $_SESSION['login'];
+
 
         $new_login = (string) $_POST['new_login'];
         $new_login = trim($new_login);
@@ -134,6 +146,37 @@
         $new_password = (string) $_POST['new_password'];
         $new_password = trim($new_password);
 
+
+        if(!empty($new_login) && !empty($old_password) && !empty($new_password))
+        {
+            if(password_verify($old_password, $user_password_hash))
+            {
+                $new_password_hash = $this->hash_password($new_password);
+                $collection->findOneAndReplace(array('login' => $_SESSION['login']), array('login' => $new_login, 'password' => $new_password_hash));
+                session_start();
+                $_SESSION['login'] = $new_login;
+            }
+        }
+
+        if(!empty($new_login) && empty($old_password) && empty($new_password))
+        {
+            $collection->findOneAndReplace(array('login' => $_SESSION['login']), array('login' => $new_login, 'password' => $user_password_hash));
+            session_start();
+            $_SESSION['login'] = $new_login;
+        }
+
+        if(empty($new_login) && !empty($old_password) && !empty($new_password))
+        {
+            if(password_verify($old_password, $user_password_hash))
+            {
+                $new_password_hash = $this->hash_password($new_password);
+                $collection->findOneAndReplace(array('login' => $_SESSION['login']), array('login' => $user_login,'password' => $new_password_hash));
+                session_start();
+                $_SESSION['login'] = $user_login;
+            }
+        }
+
+        /*
         if(!empty($new_login))
         {
             $data = array('login' => $new_login);
@@ -143,18 +186,29 @@
 
         if(!empty($old_password) && !empty($new_password))
         {
-          $user_password_hash = $user_data['password'];
-
-          if(password_verify($old_password, $user_password_hash))
-          {
-              $collection->findOneAndReplace(array('login' => $_SESSION['login']), array('password' => $new_password));
-          }
         }
-
+        */
 
     }
 
+    function check_uniqueness($user_login)
+    {
+        $client = $this->database_connect();
+        $collection = $client->selectCollection('task', 'users');
 
+        $user_data = $collection->findOne(array('login' => $user_login));
+
+        if(isset($user_data['login']))
+        {
+            $existence = (bool) true;
+            return $existence;
+        }
+        else
+        {
+            $existence = (bool) false;
+            return $existence;
+        }
+    }
 
     }
 

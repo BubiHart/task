@@ -31,13 +31,14 @@ footer
 
 header ul
 {
+    min-width: 350px;
     height: auto;
     width: auto;
     display: flex;
     flex-direction: row;
     list-style: none;
     margin-left: auto;
-    margin-right: 50px;
+    /*margin-right: 100px;*/
 }
 
 /*
@@ -54,6 +55,11 @@ header ul
     /*background-color: #dddddd;*/
     color: #000;
     text-decoration: none;
+}
+
+.main_navigation_li
+{
+    display: flex;
 }
 
 .main_navigation_li a:hover
@@ -78,5 +84,13 @@ header ul
     color: #000;
     text-decoration: none;
 }
+
+
+#login_form_submit
+{
+    color: #000;
+    text-decoration: none;
+}
+
 
 

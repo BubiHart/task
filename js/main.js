@@ -55,7 +55,7 @@ $(document).ready(function() {
         }).done(function(response)
         {
 
-
+            window.location.reload();
         });
     });
 
@@ -75,12 +75,9 @@ $(document).ready(function() {
             }
         }).done(function(response)
         {
-            var message = JSON.parse(response);
 
-            if(message['login_success'] == 'success')
-            {
-                window.location.reload();
-            }
+            window.location.reload();
+
         });
     });
 
@@ -100,10 +97,28 @@ $(document).ready(function() {
             }
         }).done(function(response)
         {
-            alert(response);
-
+            window.location.reload();
         });
     });
+
+    $("#log_out_link").on("click", function(event) {
+        event.preventDefault();
+
+        var link = $(this).attr("href");
+
+        $.ajax({
+            url: link,
+            method: 'post',
+            cache: false,
+            data: {
+                log_out: 'logout'
+            }
+        }).done(function(response)
+        {
+            window.location.reload();
+        });
+    });
+
 
 
 
